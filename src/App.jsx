@@ -5,14 +5,29 @@ function App() {
   const [uniqueSubjects, setUniqueSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [groupedSubjects, setGroupedSubjects] = useState({});
 
   // Filter state
   const [selectedSubject, setSelectedSubject] = useState("");
-  const [affiliationQuery, setAffliliationQuery] = useState("");
+  const [affiliationQuery, setAffiliationQuery] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
 
-  console.log(selectedSubject, affiliationQuery, dateFrom, dateTo);
+  function groupBySubjectPrefix(subjects) {
+    const groups = {};
+
+    for (const subj of subjects) {
+      const prefix = subj.includes(".") ? subj.split(".")[0] : subj;
+
+      if (!groups[prefix]) {
+        groups[prefix] = [];
+      }
+
+      groups[prefix].push(subj);
+    }
+
+    return groups;
+  }
 
   function groupByPaperId(records) {
     const groups = {};
@@ -41,7 +56,7 @@ function App() {
       for (const subj of item.subject_labels) subjects.add(subj);
     }
 
-    return [...subjects];
+    return [...subjects].sort();
   }
 
   useEffect(() => {
@@ -54,9 +69,11 @@ function App() {
         const data = await res.json();
         const grouped = groupByPaperId(data);
         const subjects = extractUniqueSubjects(data);
+        const groupedSubjects = groupBySubjectPrefix(subjects);
 
         setPapers(grouped);
         setUniqueSubjects(subjects);
+        setGroupedSubjects(groupedSubjects);
       } catch (error) {
         console.error(error);
         setError("Failed to load papers");
@@ -89,10 +106,14 @@ function App() {
               onChange={(e) => setSelectedSubject(e.target.value)}
             >
               <option value="">All subjects</option>
-              {uniqueSubjects.map((subj) => (
-                <option key={subj} value={subj}>
-                  {subj}
-                </option>
+              {Object.entries(groupedSubjects).map(([prefix, subjects]) => (
+                <optgroup key={prefix} label={prefix}>
+                  {subjects.map((subj) => (
+                    <option key={subj} value={subj}>
+                      {subj}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </div>
