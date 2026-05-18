@@ -6,7 +6,14 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  console.log(papers);
+  // Filter state
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [affiliationQuery, setAffliliationQuery] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
+  console.log(selectedSubject, affiliationQuery, dateFrom, dateTo);
+
   function groupByPaperId(records) {
     const groups = {};
 
@@ -70,7 +77,65 @@ function App() {
         {error && <p>{error}</p>}
       </header>
       <main>
-        <div className="mt-6 rounded-md border border-gray-200 overflow-x-auto">
+        <div className="flex flex-col md:flex-row gap-2 my-4">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="subject-filter" className="text-sm">
+              Subject
+            </label>
+            <select
+              id="subject-filter"
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
+            >
+              <option value="">All subjects</option>
+              {uniqueSubjects.map((subj) => (
+                <option key={subj} value={subj}>
+                  {subj}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="affiliation-search-input" className="text-sm">
+              Affiliation
+            </label>
+            <input
+              id="affiliation-search-input"
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              placeholder="Type to search... "
+              value={affiliationQuery}
+              onChange={(e) => setAffiliationQuery(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="date-from" className="text-sm">
+              From
+            </label>
+            <input
+              type="date"
+              id="date-from"
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="date-to" className="text-sm">
+              To
+            </label>
+            <input
+              type="date"
+              id="date-to"
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="my-4 rounded-md border border-gray-200 overflow-x-auto">
           <table className="min-w-full text-left border-collapse">
             <thead className="bg-gray-200">
               <tr>
