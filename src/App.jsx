@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 function App() {
   const [papers, setPapers] = useState([]);
-  const [uniqueSubjects, setUniqueSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [groupedSubjects, setGroupedSubjects] = useState({});
@@ -12,6 +11,23 @@ function App() {
   const [affiliationQuery, setAffiliationQuery] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+
+  const filteredPapers = useMemo(() => {
+    return papers.filter((paper) => {
+      if (selectedSubject && !paper.subject_labels.includes(selectedSubject))
+        return false;
+      if (affiliationQuery) {
+        const query = affiliationQuery.toLowerCase();
+        const match = paper.affiliation.some((aff) =>
+          aff.toLowerCase().includes(query),
+        );
+        if (!match) return false;
+      }
+      if (dateFrom && paper.created.slice(0, 10) < dateFrom) return false;
+      if (dateTo && paper.created.slice(0, 10) > dateTo) return false;
+      return true;
+    });
+  }, [papers, selectedSubject, affiliationQuery, dateFrom, dateTo]);
 
   function groupBySubjectPrefix(subjects) {
     const groups = {};
@@ -72,7 +88,6 @@ function App() {
         const groupedSubjects = groupBySubjectPrefix(subjects);
 
         setPapers(grouped);
-        setUniqueSubjects(subjects);
         setGroupedSubjects(groupedSubjects);
       } catch (error) {
         console.error(error);
@@ -90,7 +105,12 @@ function App() {
       <header>
         <h1 className="text-2xl font-bold">arXiv Explorer</h1>
         {loading && <p>Loading... </p>}
-        {!loading && !error && <p>Loaded {papers.length} papers</p>}
+        {!loading && !error && (
+          <p>
+            Showing {Math.min(100, filteredPapers.length)} of{" "}
+            {filteredPapers.length} papers
+          </p>
+        )}
         {error && <p>{error}</p>}
       </header>
       <main>
@@ -175,7 +195,7 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {papers.slice(0, 100).map((paper) => (
+              {filteredPapers.slice(0, 100).map((paper) => (
                 <tr
                   key={paper.id}
                   className="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100 last:border-0 text-sm"
