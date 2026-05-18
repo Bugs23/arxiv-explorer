@@ -13,6 +13,7 @@ function App() {
   const [dateTo, setDateTo] = useState("");
   const [debouncedAffiliationQuery, setDebouncedAffiliationQuery] =
     useState("");
+  const [sortDirection, setSortDirection] = useState("desc");
 
   useEffect(() => {
     const t = setTimeout(
@@ -39,6 +40,16 @@ function App() {
       return true;
     });
   }, [papers, selectedSubject, debouncedAffiliationQuery, dateFrom, dateTo]);
+
+  const sortedPapers = useMemo(() => {
+    return [...filteredPapers].sort((a, b) => {
+      if (sortDirection === "desc") {
+        return b.created.localeCompare(a.created);
+      }
+
+      return a.created.localeCompare(b.created);
+    });
+  }, [filteredPapers, sortDirection]);
 
   function groupBySubjectPrefix(subjects) {
     const groups = {};
@@ -192,7 +203,16 @@ function App() {
             <thead className="bg-gray-200">
               <tr>
                 <th scope="col" className="px-4 py-2 font-semibold">
-                  Date
+                  <button
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setSortDirection((prev) =>
+                        prev === "desc" ? "asc" : "desc",
+                      )
+                    }
+                  >
+                    Date {sortDirection === "desc" ? "↓" : "↑"}
+                  </button>
                 </th>
                 <th scope="col" className="px-4 py-2 font-semibold">
                   Paper ID
@@ -206,7 +226,7 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {filteredPapers.slice(0, 100).map((paper) => (
+              {sortedPapers.slice(0, 100).map((paper) => (
                 <tr
                   key={paper.id}
                   className="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100 last:border-0 text-sm"
