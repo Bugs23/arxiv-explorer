@@ -11,13 +11,24 @@ function App() {
   const [affiliationQuery, setAffiliationQuery] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [debouncedAffiliationQuery, setDebouncedAffiliationQuery] =
+    useState("");
+
+  useEffect(() => {
+    const t = setTimeout(
+      () => setDebouncedAffiliationQuery(affiliationQuery),
+      300,
+    );
+
+    return () => clearTimeout(t);
+  }, [affiliationQuery]);
 
   const filteredPapers = useMemo(() => {
     return papers.filter((paper) => {
       if (selectedSubject && !paper.subject_labels.includes(selectedSubject))
         return false;
-      if (affiliationQuery) {
-        const query = affiliationQuery.toLowerCase();
+      if (debouncedAffiliationQuery) {
+        const query = debouncedAffiliationQuery.toLowerCase();
         const match = paper.affiliation.some((aff) =>
           aff.toLowerCase().includes(query),
         );
@@ -27,7 +38,7 @@ function App() {
       if (dateTo && paper.created.slice(0, 10) > dateTo) return false;
       return true;
     });
-  }, [papers, selectedSubject, affiliationQuery, dateFrom, dateTo]);
+  }, [papers, selectedSubject, debouncedAffiliationQuery, dateFrom, dateTo]);
 
   function groupBySubjectPrefix(subjects) {
     const groups = {};
