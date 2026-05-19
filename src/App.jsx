@@ -234,7 +234,16 @@ function App() {
                   <td className="px-4 py-2 whitespace-nowrap">
                     {paper.created.slice(0, 10)}
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap">{paper.id}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <a
+                      className="text-blue-600 hover:underline focus:underline"
+                      href={`https://arxiv.org/abs/${paper.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {paper.id}
+                    </a>
+                  </td>
                   <td className="px-4 py-2 max-w-xs align-top">
                     <ul>
                       {paper.affiliation.map((aff, index) => (
