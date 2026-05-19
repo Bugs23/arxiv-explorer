@@ -143,7 +143,11 @@ function App() {
             </label>
             <select
               id="subject-filter"
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className={`rounded-md border border-gray-300 px-3 py-2 text-sm ${
+                selectedSubject
+                  ? "border-blue-500 bg-blue-900 text-white"
+                  : "border-gray-300"
+              }`}
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
             >
@@ -166,7 +170,11 @@ function App() {
             </label>
             <input
               id="affiliation-search-input"
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className={`rounded-md border border-gray-300 px-3 py-2 text-sm ${
+                affiliationQuery
+                  ? "border-blue-500 bg-blue-900 text-white"
+                  : "border-gray-300"
+              }`}
               placeholder="Type to search... "
               value={affiliationQuery}
               onChange={(e) => setAffiliationQuery(e.target.value)}
@@ -179,7 +187,11 @@ function App() {
             <input
               type="date"
               id="date-from"
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className={`rounded-md border border-gray-300 px-3 py-2 text-sm ${
+                dateFrom
+                  ? "border-blue-500 bg-blue-900 text-white"
+                  : "border-gray-300"
+              }`}
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
             />
@@ -192,7 +204,11 @@ function App() {
             <input
               type="date"
               id="date-to"
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className={`rounded-md border border-gray-300 px-3 py-2 text-sm ${
+                dateTo
+                  ? "border-blue-500 bg-blue-900 text-white"
+                  : "border-gray-300"
+              }`}
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
             />
@@ -246,7 +262,7 @@ function App() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <a
-                        className="text-blue-600 hover:underline focus:underline"
+                        className="text-blue-900 hover:underline focus:underline"
                         href={`https://arxiv.org/abs/${paper.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
