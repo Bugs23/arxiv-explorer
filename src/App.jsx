@@ -226,45 +226,56 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {sortedPapers.slice(0, 100).map((paper) => (
-                <tr
-                  key={paper.id}
-                  className="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100 last:border-0 text-sm"
-                >
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    {paper.created.slice(0, 10)}
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <a
-                      className="text-blue-600 hover:underline focus:underline"
-                      href={`https://arxiv.org/abs/${paper.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {paper.id}
-                    </a>
-                  </td>
-                  <td className="px-4 py-2 max-w-xs align-top">
-                    <ul>
-                      {paper.affiliation.map((aff, index) => (
-                        <li key={index}>{aff}</li>
-                      ))}
-                    </ul>
-                  </td>
-                  <td className="px-4 py-2 min-w-[240px] align-top">
-                    <div className="flex flex-wrap gap-1">
-                      {paper.subject_labels.map((subj) => (
-                        <span
-                          key={subj}
-                          className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-[.75em] text-gray-600 inset-ring inset-ring-gray-200"
-                        >
-                          {subj}
-                        </span>
-                      ))}
-                    </div>
+              {sortedPapers.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="px-4 py-8 text-center text-gray-500"
+                  >
+                    No papers match selected filters
                   </td>
                 </tr>
-              ))}
+              ) : (
+                sortedPapers.slice(0, 100).map((paper) => (
+                  <tr
+                    key={paper.id}
+                    className="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100 last:border-0 text-sm"
+                  >
+                    <td className="px-4 py-2 whitespace-nowrap">
+                      {paper.created.slice(0, 10)}
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap">
+                      <a
+                        className="text-blue-600 hover:underline focus:underline"
+                        href={`https://arxiv.org/abs/${paper.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {paper.id}
+                      </a>
+                    </td>
+                    <td className="px-4 py-2 max-w-xs align-top">
+                      <ul>
+                        {paper.affiliation.map((aff, index) => (
+                          <li key={index}>{aff}</li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="px-4 py-2 min-w-[240px] align-top">
+                      <div className="flex flex-wrap gap-1">
+                        {paper.subject_labels.map((subj) => (
+                          <span
+                            key={subj}
+                            className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-[.75em] text-gray-600 inset-ring inset-ring-gray-200"
+                          >
+                            {subj}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
