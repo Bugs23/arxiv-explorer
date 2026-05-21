@@ -15,8 +15,8 @@ author affiliations, subjects, and publication dates. I built a table based
 interface for exploring it: three live filters (subject, affiliation, date
 range) and a sortable date column.
 
-I chose a table over charts deliberately. The exercise is about _interacting_
-with the metadata, and a sortable, filterable list lets a user answer concrete
+I chose a table over charts on purpose. The exercise is about _interacting_ with
+the metadata, and a sortable, filterable list lets a user answer concrete
 questions like "what came out of this institution," "what's recent in this
 subject", directly without committing to a particular visualization up front.
 
@@ -28,7 +28,7 @@ npm run dev
 ```
 
 The data file (`papers.json`, ~48MB) lives in `public/data/` and is fetched at
-runtime rather than bundled, since it's too large to import.
+runtime rather than bundled, since it's too big to import.
 
 ## Design choices
 
@@ -62,6 +62,13 @@ runtime rather than bundled, since it's too large to import.
 
 ## Tradeoffs & what I'd add
 
+- **Data loading.** The full dataset (358k records, 48MB) is fetched on page
+  load, which crushes initial load time. Lighthouse Performance score is 43 for
+  this reason, while Accessibility, Best Practices, and SEO score 100/100/90. A
+  production app would use pagination and data from an API or database rather
+  than fetching the entire dataset to the browser. That would be the biggest
+  single performance improvement.
+
 - **Affiliation normalization.** Affiliation matching is substring-based, so
   "MIT" and "Massachusetts Institute of Technology" wouldn't match to the same
   institution. In a production version I would normalize affiliations using
@@ -72,19 +79,19 @@ runtime rather than bundled, since it's too large to import.
   pagination or windowed/virtualized rendering would let users navigate through
   the full set of results.
 
-- **Component structure.** Everything is in a single `App.jsx`. Given the scope,
-  I kept it in one file; with more time I'd extract the data utilities into a
+- **Component structure.** Everything is in a single `App.jsx`. Given the time
+  limit, I kept it in one file. With more time I'd put the data utilities into a
   `utils` and split the UI into `FilterBar` and `PapersTable` components for
   clear separation and to make it easier to test.
 
 - **Mobile.** The layout doesn't break on small screens. The filters stack, the
-  table scrolls horizontally, but a true mobile first redesign like card based
-  rows instead of a wide table was not feasible for the time budget.
+  table scrolls horizontally, but I didn't have enough time for a true mobile
+  first redesign like card based rows instead of a wide table.
 
 ## AI disclosure
 
 The exercise notes a preference for no AI tools, with disclosure if used. I used
-Claude (Anthropic) during this build, and want to be specific about how.
+Claude during this build, and want to be specific about how.
 
 **What Claude did:**
 
@@ -104,15 +111,17 @@ Claude (Anthropic) during this build, and want to be specific about how.
   Tradeoffs section.
 - All the judgment calls captured in NOTES.md as I made them.
 
-I drove the build and made the engineering and design decisions. Claude acted as
-a pair programmer for debugging, code review, and talking through implementation
-options.
+I drove the build and made the engineering and design decisions. Claude acted
+like a pair programmer for debugging, code review, and talking through
+implementation options.
 
 ## Time spent
 
-3.5 hours
+4 hours
 
 ## See also
 
-`NOTES.md` at the repo root is the running log of design decisions I kept during
-the build.
+- `NOTES.md` at the repo root is the running log of design decisions I kept
+  during the build.
+- `docs/wireframe-sketch.jpeg` — initial wireframe sketch; the final UI follows
+  it closely
