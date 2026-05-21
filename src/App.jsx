@@ -214,87 +214,98 @@ function App() {
             />
           </div>
         </div>
-        <div className="my-4 rounded-md border border-gray-200 overflow-x-auto">
-          <table className="min-w-full text-left border-collapse">
-            <thead className="bg-gray-200">
-              <tr>
-                <th scope="col" className="px-4 py-2 font-semibold">
-                  <button
-                    className="cursor-pointer"
-                    onClick={() =>
-                      setSortDirection((prev) =>
-                        prev === "desc" ? "asc" : "desc",
-                      )
-                    }
-                  >
-                    Date {sortDirection === "desc" ? "↓" : "↑"}
-                  </button>
-                </th>
-                <th scope="col" className="px-4 py-2 font-semibold">
-                  Paper ID
-                </th>
-                <th scope="col" className="px-4 py-2 font-semibold">
-                  Affiliations
-                </th>
-                <th scope="col" className="px-4 py-2 font-semibold">
-                  Subjects
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedPapers.length === 0 ? (
+        {loading && (
+          <div className="flex justify-center my-8">
+            <div
+              className="h-24 w-24 animate-spin rounded-full border-4 border-solid border-blue-600 border-t-transparent"
+              role="status"
+              aria-label="Loading papers"
+            ></div>
+          </div>
+        )}
+        {!loading && !error && (
+          <div className="my-4 rounded-md border border-gray-200 overflow-x-auto">
+            <table className="min-w-full text-left border-collapse">
+              <thead className="bg-gray-200">
                 <tr>
-                  <td
-                    colSpan={4}
-                    className="px-4 py-8 text-center text-gray-500"
-                  >
-                    No papers match selected filters
-                  </td>
+                  <th scope="col" className="px-4 py-2 font-semibold">
+                    <button
+                      className="cursor-pointer"
+                      onClick={() =>
+                        setSortDirection((prev) =>
+                          prev === "desc" ? "asc" : "desc",
+                        )
+                      }
+                    >
+                      Date {sortDirection === "desc" ? "↓" : "↑"}
+                    </button>
+                  </th>
+                  <th scope="col" className="px-4 py-2 font-semibold">
+                    Paper ID
+                  </th>
+                  <th scope="col" className="px-4 py-2 font-semibold">
+                    Affiliations
+                  </th>
+                  <th scope="col" className="px-4 py-2 font-semibold">
+                    Subjects
+                  </th>
                 </tr>
-              ) : (
-                sortedPapers.slice(0, 100).map((paper) => (
-                  <tr
-                    key={paper.id}
-                    className="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100 last:border-0 text-sm"
-                  >
-                    <td className="px-4 py-2 whitespace-nowrap">
-                      {paper.created.slice(0, 10)}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
-                      <a
-                        className="text-blue-900 hover:underline focus:underline"
-                        href={`https://arxiv.org/abs/${paper.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {paper.id}
-                      </a>
-                    </td>
-                    <td className="px-4 py-2 max-w-xs align-top">
-                      <ul>
-                        {paper.affiliation.map((aff, index) => (
-                          <li key={index}>{aff}</li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td className="px-4 py-2 min-w-[240px] align-top">
-                      <div className="flex flex-wrap gap-1">
-                        {paper.subject_labels.map((subj) => (
-                          <span
-                            key={subj}
-                            className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-[.75em] text-gray-600 inset-ring inset-ring-gray-200"
-                          >
-                            {subj}
-                          </span>
-                        ))}
-                      </div>
+              </thead>
+              <tbody>
+                {sortedPapers.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-4 py-8 text-center text-gray-500"
+                    >
+                      No papers match selected filters
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                ) : (
+                  sortedPapers.slice(0, 100).map((paper) => (
+                    <tr
+                      key={paper.id}
+                      className="border-b border-gray-200 even:bg-gray-50 hover:bg-gray-100 last:border-0 text-sm"
+                    >
+                      <td className="px-4 py-2 whitespace-nowrap">
+                        {paper.created.slice(0, 10)}
+                      </td>
+                      <td className="px-4 py-2 whitespace-nowrap">
+                        <a
+                          className="text-blue-900 hover:underline focus:underline"
+                          href={`https://arxiv.org/abs/${paper.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {paper.id}
+                        </a>
+                      </td>
+                      <td className="px-4 py-2 max-w-xs align-top">
+                        <ul>
+                          {paper.affiliation.map((aff, index) => (
+                            <li key={index}>{aff}</li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td className="px-4 py-2 min-w-[240px] align-top">
+                        <div className="flex flex-wrap gap-1">
+                          {paper.subject_labels.map((subj) => (
+                            <span
+                              key={subj}
+                              className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-[.75em] text-gray-600 inset-ring inset-ring-gray-200"
+                            >
+                              {subj}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </main>
     </div>
   );
