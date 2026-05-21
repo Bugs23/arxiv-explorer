@@ -123,5 +123,5 @@ implementation options.
 
 - `NOTES.md` at the repo root is the running log of design decisions I kept
   during the build.
-- `docs/wireframe-sketch.jpeg` — initial wireframe sketch; the final UI follows
+- `docs/wireframe-sketch.png` — initial wireframe sketch; the final UI follows
   it closely
